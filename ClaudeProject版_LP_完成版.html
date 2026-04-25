@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤖 AI士業スキルライブラリ Claude Project版 | kenjispark AI士業ラボ</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f0f7f0;
+    --bg3: #e8f4e8;
+    --green: #2d6a4f;
+    --green2:#1e4d38;
+    --green3:#40916c;
+    --accent:#b5835a;
+    --orange: #dd6b20;
+    --text: #1a2e1a;
+    --muted: #4a6858;
+    --light: #6b8f75;
+    --border:rgba(45,106,79,.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #ffffff;
+    color: #1a2e1a;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: .4;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(45,106,79,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,106,79,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ナビ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 16px 24px;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,106,79,.15);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900; font-size: 14px;
+    color: #2d6a4f; letter-spacing: .1em;
+  }
+  .nav-cta {
+    background: #2d6a4f; color: #ffffff;
+    font-size: 12px; font-weight: 700;
+    padding: 8px 20px; border-radius: 4px;
+    text-decoration: none; transition: background .2s;
+  }
+  .nav-cta:hover { background: #1e4d38; }
+
+  /* ヒーロー */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 120px 0 80px;
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: .25em;
+    color: #2d6a4f; font-weight: 400;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 40px; height: 1px;
+    background: #2d6a4f;
+  }
+  .hero-title {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: clamp(48px, 8vw, 88px);
+    line-height: 1.0; letter-spacing: -.02em;
+    color: #1a2e1a; margin-bottom: 8px;
+  }
+  .hero-title span {
+    color: #2d6a4f;
+    display: inline-block;
+  }
+  .hero-title-sub {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 4vw, 36px);
+    color: #b5835a;
+    margin-top: 16px;
+    letter-spacing: .05em;
+  }
+  .hero-subtitle {
+    font-size: 16px; line-height: 2.0; font-weight: 300;
+    color: #4a6858; margin: 36px 0 40px; max-width: 620px;
+  }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
+  .badge {
+    display: inline-block; padding: 6px 14px;
+    background: rgba(45,106,79,.08); color: #2d6a4f;
+    font-size: 11px; font-weight: 700;
+    border: 1px solid rgba(45,106,79,.2);
+    border-radius: 2px; letter-spacing: .05em;
+  }
+  .badge-claude {
+    background: rgba(181,131,90,.12); color: #b5835a;
+    border-color: rgba(181,131,90,.3);
+  }
+  .hero-cta-group { display: flex; gap: 16px; margin-bottom: 60px; flex-wrap: wrap; }
+  .btn-primary, .btn-secondary {
+    font-size: 13px; font-weight: 700; letter-spacing: .05em;
+    padding: 14px 28px; border-radius: 4px;
+    text-decoration: none; transition: all .2s;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: #2d6a4f; color: white;
+    border: 1px solid #2d6a4f;
+  }
+  .btn-primary:hover { background: #1e4d38; }
+  .btn-secondary {
+    background: transparent; color: #2d6a4f;
+    border: 1px solid #2d6a4f;
+  }
+  .btn-secondary:hover { background: rgba(45,106,79,.05); }
+
+  .hero-stats { display: flex; gap: 48px; padding-top: 40px; border-top: 1px solid rgba(45,106,79,.1); }
+  .stat { display: flex; flex-direction: column; gap: 6px; }
+  .stat-num {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900; font-size: 36px;
+    color: #2d6a4f; line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px; font-weight: 400;
+    color: #4a6858; letter-spacing: .1em;
+  }
+
+  /* セクション共通 */
+  section { padding: 100px 0; position: relative; }
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; letter-spacing: .25em;
+    color: #2d6a4f; font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 40px; height: 1px;
+    background: #2d6a4f;
+  }
+  .section-title {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.2; letter-spacing: -.02em;
+    color: #1a2e1a; margin-bottom: 32px;
+  }
+  .section-sub {
+    font-size: 15px; line-height: 1.9; color: #4a6858;
+    max-width: 700px; margin-bottom: 64px;
+  }
+  .divider {
+    height: 1px; background: rgba(45,106,79,.1); margin: 0;
+  }
+
+  /* 比較表セクション */
+  .comparison {
+    background: linear-gradient(180deg, #ffffff 0%, #f0f7f0 100%);
+  }
+  .comparison-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 40px;
+  }
+  .comparison-card {
+    background: white;
+    border: 1px solid rgba(45,106,79,.15);
+    border-radius: 8px;
+    padding: 32px;
+  }
+  .comparison-card.highlight {
+    background: linear-gradient(135deg, #2d6a4f 0%, #1e4d38 100%);
+    color: white;
+    border-color: #2d6a4f;
+    box-shadow: 0 8px 24px rgba(45,106,79,.2);
+  }
+  .comparison-card.highlight .cc-name,
+  .comparison-card.highlight .cc-list li {
+    color: white;
+  }
+  .cc-label {
+    display: inline-block;
+    font-size: 10px; letter-spacing: .15em;
+    padding: 4px 10px; border-radius: 2px;
+    margin-bottom: 16px;
+    background: rgba(45,106,79,.1); color: #2d6a4f;
+  }
+  .comparison-card.highlight .cc-label {
+    background: rgba(255,255,255,.2); color: white;
+  }
+  .cc-name {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    color: #2d6a4f; margin-bottom: 16px;
+  }
+  .cc-list { list-style: none; }
+  .cc-list li {
+    font-size: 13px; line-height: 2.0;
+    padding-left: 20px; position: relative;
+    color: #4a6858;
+  }
+  .cc-list li::before {
+    content: '✓'; position: absolute; left: 0;
+    color: #40916c; font-weight: 700;
+  }
+  .comparison-card.highlight .cc-list li::before {
+    color: #b5835a;
+  }
+
+  /* 問題セクション */
+  .problems { background: #ffffff; }
+  .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .problem-card {
+    padding: 28px;
+    background: #f0f7f0;
+    border-left: 3px solid #2d6a4f;
+    border-radius: 0 4px 4px 0;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .problem-icon { font-size: 32px; flex-shrink: 0; }
+  .problem-text {
+    font-size: 14px; line-height: 1.8;
+    color: #1a2e1a; font-weight: 400;
+  }
+
+  /* Project紹介セクション */
+  .projects { background: linear-gradient(180deg, #f0f7f0 0%, #ffffff 100%); }
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .project-card {
+    background: white;
+    border: 1px solid rgba(45,106,79,.15);
+    border-radius: 6px;
+    padding: 24px;
+    transition: all .3s;
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(45,106,79,.12);
+    border-color: #40916c;
+  }
+  .project-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  .project-name {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #1a2e1a; margin-bottom: 8px;
+  }
+  .project-skills {
+    font-size: 12px; line-height: 1.7;
+    color: #4a6858;
+  }
+
+  /* フローセクション */
+  .flow { background: #ffffff; }
+  .flow-steps {
+    display: grid; gap: 20px;
+    counter-reset: step;
+  }
+  .flow-step {
+    display: flex; gap: 24px;
+    padding: 32px;
+    background: #f0f7f0;
+    border-radius: 6px;
+    position: relative;
+  }
+  .flow-num {
+    flex-shrink: 0;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900; font-size: 48px;
+    color: #2d6a4f; line-height: 1;
+    min-width: 80px;
+  }
+  .flow-content { flex: 1; }
+  .flow-title {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 700; font-size: 20px;
+    color: #1a2e1a; margin-bottom: 12px;
+  }
+  .flow-desc {
+    font-size: 14px; line-height: 1.9;
+    color: #4a6858; margin-bottom: 12px;
+  }
+  .flow-tag {
+    display: inline-block; padding: 4px 12px;
+    background: white; color: #2d6a4f;
+    font-size: 11px; font-weight: 700;
+    border: 1px solid rgba(45,106,79,.2);
+    border-radius: 2px; letter-spacing: .05em;
+  }
+
+  /* パッケージセクション */
+  .package { background: linear-gradient(180deg, #ffffff 0%, #f0f7f0 100%); }
+  .set-box {
+    background: white;
+    border: 1px solid rgba(45,106,79,.2);
+    border-radius: 6px;
+    padding: 40px;
+  }
+  .set-items { display: grid; gap: 16px; }
+  .set-item {
+    display: flex; gap: 20px; align-items: center;
+    padding: 20px;
+    background: #f0f7f0;
+    border-radius: 4px;
+    border-left: 3px solid #2d6a4f;
+  }
+  .set-item-icon { font-size: 32px; flex-shrink: 0; }
+  .set-item-name {
+    font-size: 14px; font-weight: 700;
+    color: #1a2e1a; margin-bottom: 4px;
+  }
+  .set-item-desc {
+    font-size: 12px; color: #4a6858;
+    line-height: 1.6;
+  }
+  .set-item-badge {
+    margin-left: auto; flex-shrink: 0;
+    font-size: 10px; font-weight: 700;
+    padding: 4px 10px; border-radius: 2px;
+    background: #2d6a4f; color: white;
+    letter-spacing: .05em;
+  }
+  .set-item-badge.orange { background: #b5835a; }
+
+  /* CTA */
+  .cta-section {
+    background: linear-gradient(135deg, #1e4d38 0%, #2d6a4f 100%);
+    color: white; text-align: center;
+  }
+  .cta-title {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.3; color: white;
+    margin-bottom: 24px;
+  }
+  .cta-sub {
+    font-size: 15px; line-height: 1.9;
+    color: rgba(255,255,255,.85);
+    max-width: 600px; margin: 0 auto 40px;
+  }
+  .cta-btn {
+    display: inline-block; padding: 18px 48px;
+    background: #b5835a; color: white;
+    font-size: 14px; font-weight: 700; letter-spacing: .1em;
+    border-radius: 4px; text-decoration: none;
+    transition: background .2s;
+  }
+  .cta-btn:hover { background: #9a6d45; }
+  .cta-note {
+    font-size: 11px; color: rgba(255,255,255,.6);
+    margin-top: 20px;
+  }
+  .cta-section .section-label {
+    color: rgba(255,255,255,.85);
+    justify-content: center;
+  }
+  .cta-section .section-label::before {
+    background: rgba(255,255,255,.5);
+  }
+
+  /* フッター */
+  footer {
+    padding: 40px 0;
+    background: #f0f7f0;
+    text-align: center;
+    font-size: 12px; color: #4a6858;
+  }
+  footer a { color: #2d6a4f; text-decoration: none; font-weight: 700; }
+  footer a:hover { text-decoration: underline; }
+
+  /* アニメーション */
+  .fade-up {
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp .8s ease-out forwards;
+  }
+  .fade-up-1 { animation-delay: .15s; }
+  .fade-up-2 { animation-delay: .3s; }
+  .fade-up-3 { animation-delay: .45s; }
+  .fade-up-4 { animation-delay: .6s; }
+  .fade-up-5 { animation-delay: .75s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .comparison-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 24px; }
+    .flow-step { flex-direction: column; gap: 12px; }
+    .flow-num { font-size: 36px; min-width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">KENJISPARK AI LAB</div>
+  <a href="#cta" class="nav-cta">セットを入手する</a>
+</nav>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow fade-up">CLAUDE PROJECT × 士業専門</div>
+    <h1 class="hero-title fade-up fade-up-1">
+      AI士業<br><span>スキルライブラリ</span>
+    </h1>
+    <div class="hero-title-sub fade-up fade-up-1">/ Claude Project版</div>
+    <p class="hero-subtitle fade-up fade-up-2">
+      社労士・行政書士のための、<strong style="color:#2d6a4f;">対話型AI士業パートナー</strong>。<br>
+      8つの専門エージェント × 32スキルをClaude Projectとして構築。<br>
+      提案書・議事録・長文書類も、会話を重ねて精度を高められる。
+    </p>
+    <div class="hero-badges fade-up fade-up-3">
+      <span class="badge badge-claude">Claude Project対応</span>
+      <span class="badge">社労士・行政書士特化</span>
+      <span class="badge">対話型で深掘り可</span>
+      <span class="badge">Google Sheets CRM付き</span>
+      <span class="badge">Knowledge蓄積型</span>
+    </div>
+    <div class="hero-cta-group fade-up fade-up-4">
+      <a href="#cta" class="btn-primary">セットを入手する →</a>
+      <a href="#projects" class="btn-secondary">Project一覧を見る</a>
+    </div>
+    <div class="hero-stats fade-up fade-up-5">
+      <div class="stat">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Project</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">32</div>
+        <div class="stat-label">スキル統合</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">45分</div>
+        <div class="stat-label">セットアップ</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6</div>
+        <div class="stat-label">同梱ファイル</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Notion版との比較 -->
+<section class="comparison">
+  <div class="container">
+    <div class="section-label">COMPARISON</div>
+    <h2 class="section-title">Notion版と<br>どう違うのか？</h2>
+    <p class="section-sub">先行リリースしたNotion版は「ワンクリック実行」が強み。Claude Project版は「対話で深掘り」が強み。同じ32スキルを、異なるアプローチで扱えます。</p>
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <span class="cc-label">NOTION版</span>
+        <div class="cc-name">🔸 スピード重視</div>
+        <ul class="cc-list">
+          <li>テキスト選択 → ワンクリック実行</li>
+          <li>SNS投稿・短文メールが得意</li>
+          <li>Notionデータベースで案件管理</li>
+          <li>Notion Businessプラン必要</li>
+          <li>大量の短い処理を素早く</li>
+        </ul>
+      </div>
+      <div class="comparison-card highlight">
+        <span class="cc-label">CLAUDE PROJECT版</span>
+        <div class="cc-name">🔹 精度重視（本商品）</div>
+        <ul class="cc-list">
+          <li>対話しながら精度を高められる</li>
+          <li>提案書・議事録・長文が得意</li>
+          <li>Google Sheetsで案件管理</li>
+          <li>Claude Pro（$20/月）から利用可</li>
+          <li>Project Knowledgeで事務所が育つ</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:40px; text-align:center; color:#4a6858; font-size:14px;">
+      💡 <strong>両方使うのが最強です。</strong>短文はNotion、長文はClaude Projectの使い分けで士業業務のAI化が完成します。
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 課題 -->
+<section class="problems">
+  <div class="container">
+    <div class="section-label">PROBLEM</div>
+    <h2 class="section-title">こんな悩み、<br>ありませんか？</h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">💭</div>
+        <div class="problem-text">Claude Projectに興味はあるが、業務ごとにどう作ればいいか分からない</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">⏱</div>
+        <div class="problem-text">提案書・議事録・長文書類に時間がかかりすぎて、本業に集中できない</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🔄</div>
+        <div class="problem-text">ChatGPTやNotion AIを使っているが、士業業務に特化した出力にならない</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📁</div>
+        <div class="problem-text">商談の進捗・生成した書類・次のアクションがバラバラで管理できない</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 8つのProject -->
+<section class="projects" id="projects">
+  <div class="container">
+    <div class="section-label">SOLUTION</div>
+    <h2 class="section-title">8つの専門<br>Claude Project</h2>
+    <p class="section-sub">士業事務所の業務を8カテゴリに分類。各Projectに4つのスキルを内包した、即戦力のAIパートナー集団です。Custom instructionsをコピペするだけですぐ使えます。</p>
+    <div class="project-grid">
+      <div class="project-card">
+        <div class="project-icon">🎤</div>
+        <div class="project-name">セミナークリエイター</div>
+        <div class="project-skills">企画書 / スライド構成 / ワーク設計 / アンケート</div>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">✍️</div>
+        <div class="project-name">コンテンツライター</div>
+        <div class="project-skills">SNS / ブログ / メルマガ / 事例紹介</div>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">📋</div>
+        <div class="project-name">提案書メーカー</div>
+        <div class="project-skills">AI導入 / 助成金 / 顧問契約 / ROI説明</div>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">🔍</div>
+        <div class="project-name">リサーチャー</div>
+        <div class="project-skills">法改正 / 助成金整理 / トレンド / 用語解説</div>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">💬</div>
+        <div class="project-name">コミュニケーター</div>
+        <div class="project-skills">相談回答 / フォロー / 調整文 / 議事録</div>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">💡</div>
+        <div class="project-name">アイデアジェネレーター</div>
+        <div class="project-skills">新サービス / タイトル / LP / ネーミング</div>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">📊</div>
+        <div class="project-name">アナリスト</div>
+        <div class="project-skills">比較分析 / ヒアリング整理 / 競合比較 / 数値化</div>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">🧘</div>
+        <div class="project-name">業務マネージャー</div>
+        <div class="project-skills">週次レポート / タスク分解 / KPT / SMART目標</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 使い方フロー -->
+<section class="flow">
+  <div class="container">
+    <div class="section-label">HOW TO USE</div>
+    <h2 class="section-title">導入は<br>4ステップ・45分</h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div class="flow-content">
+          <div class="flow-title">ファイル一式をダウンロード</div>
+          <div class="flow-desc">Instructions集・設計書・運用事例集・CRMテンプレート・セットアップ手順書の5点セット。手順書通りに進めれば迷いません。</div>
+          <span class="flow-tag">所要時間：5分</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div class="flow-content">
+          <div class="flow-title">8つのProjectを作成</div>
+          <div class="flow-desc">Claudeにログイン→新規プロジェクト→Custom instructionsをコピペ。1Projectあたり3分、合計25分で完成します。</div>
+          <span class="flow-tag">所要時間：25分</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div class="flow-content">
+          <div class="flow-title">案件管理CRMを構築</div>
+          <div class="flow-desc">Excelファイルを Google Sheets にアップロード。ステータス・プロジェクトのプルダウンが最初から設定済み。サンプルデータで使い方も分かります。</div>
+          <span class="flow-tag">所要時間：10分</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div class="flow-content">
+          <div class="flow-title">実際の業務で使い始める</div>
+          <div class="flow-desc">運用事例集の5パターンから、自分の業務に近いものを選んで試す。1週間で手応え、1ヶ月で習慣化されます。</div>
+          <span class="flow-tag">効果実感：1週間〜</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 同梱ファイル -->
+<section class="package" id="download">
+  <div class="container">
+    <div class="section-label">PACKAGE</div>
+    <h2 class="section-title">同梱ファイル</h2>
+    <p class="section-sub">6つのファイルがセットになっています。購入後すぐ、完全なセットアップが可能です。</p>
+    <div class="set-box">
+      <div class="set-items">
+        <div class="set-item">
+          <div class="set-item-icon">📝</div>
+          <div>
+            <div class="set-item-name">ClaudeProject版_Instructions集.txt</div>
+            <div class="set-item-desc">8つのProjectのCustom instructions完全版。コピペするだけで即稼働。カスタマイズ欄も用意</div>
+          </div>
+          <div class="set-item-badge">メイン</div>
+        </div>
+        <div class="set-item">
+          <div class="set-item-icon">📘</div>
+          <div>
+            <div class="set-item-name">ClaudeProject版_全体設計書.docx</div>
+            <div class="set-item-desc">システムの思想・アーキテクチャ・プランごとの違い。全体像を深く理解できる40ページのガイド</div>
+          </div>
+          <div class="set-item-badge">設計書</div>
+        </div>
+        <div class="set-item">
+          <div class="set-item-icon">📊</div>
+          <div>
+            <div class="set-item-name">案件管理CRM.xlsx</div>
+            <div class="set-item-desc">Google Sheetsにアップロードするだけ。パイプライン集計・ステータス管理・Drive連携対応</div>
+          </div>
+          <div class="set-item-badge orange">CRM</div>
+        </div>
+        <div class="set-item">
+          <div class="set-item-icon">📖</div>
+          <div>
+            <div class="set-item-name">ClaudeProject版_運用フロー事例集.docx</div>
+            <div class="set-item-desc">セミナー企画・提案書作成・法改正対応など5つの具体ケース。依頼文テンプレそのまま使える</div>
+          </div>
+          <div class="set-item-badge">事例集</div>
+        </div>
+        <div class="set-item">
+          <div class="set-item-icon">📋</div>
+          <div>
+            <div class="set-item-name">ClaudeProject版_セットアップ手順書.docx</div>
+            <div class="set-item-desc">45分で完成するステップバイステップガイド。チェックリスト付きで迷わず完走</div>
+          </div>
+          <div class="set-item-badge">手順書</div>
+        </div>
+      
+        <div class="set-item">
+          <div class="set-item-icon">📄</div>
+          <div>
+            <div class="set-item-name">README.txt</div>
+            <div class="set-item-desc">同梱ファイル一覧、読む順番、必要環境、ライセンスをまとめた案内ファイル</div>
+          </div>
+          <div class="set-item-badge">案内</div>
+        </div>
+</div>
+    </div>
+  </div>
+
+    <div style="margin-top:32px;padding:28px;background:#fff;border:1px solid rgba(45,106,79,.18);border-radius:8px;">
+      <h3 style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:22px;color:#1a2e1a;margin-bottom:14px;">ダウンロード用リンク</h3>
+      <p style="font-size:13px;color:#4a6858;margin-bottom:20px;">GitHub Pages等に設置する場合は、このHTMLと同じ階層に下記ファイルを置くとリンクが機能します。</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
+        <a class="btn-secondary" href="./ClaudeProject版_Instructions集.txt" download>Instructions集</a>
+        <a class="btn-secondary" href="./ClaudeProject版_全体設計書.docx" download>全体設計書</a>
+        <a class="btn-secondary" href="./ClaudeProject版_セットアップ手順書.docx" download>セットアップ手順書</a>
+        <a class="btn-secondary" href="./ClaudeProject版_運用フロー事例集.docx" download>運用フロー事例集</a>
+        <a class="btn-secondary" href="./案件管理CRM_完成版.xlsx" download>案件管理CRM</a>
+        <a class="btn-secondary" href="./README.txt" download>README</a>
+      </div>
+    </div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="container">
+    <div class="section-label">GET STARTED</div>
+    <h2 class="cta-title">対話型で深める、<br>士業のAIパートナー</h2>
+    <p class="cta-sub">Claude Pro または Max のプランがあれば、<br>今日から使い始められます。</p>
+    <a href="#download" class="cta-btn">同梱ファイル一覧へ進む</a>
+    <p class="cta-note">※ Claude Pro または Claude Max、Googleアカウントが必要です</p>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:8px;">
+      <strong style="color:#2d6a4f;">kenjispark AI士業ラボ</strong> ／ おぶすま社会保険労務士事務所
+    </p>
+    <p>
+      <a href="https://aitoyume.net">aitoyume.net</a>
+      &nbsp;／&nbsp;
+      <a href="https://cocodesmile.com">cocodesmile.com</a>
+    </p>
+    <p style="margin-top:16px;font-size:11px;color:#475569;">© 2026 kenjispark AI士業ラボ. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
