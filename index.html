@@ -183,6 +183,89 @@
     height: 1px; background: rgba(45,106,79,.1); margin: 0;
   }
 
+  /* ===== メディアセクション（動画・音声・PDF共通） ===== */
+  .media-section {
+    background: linear-gradient(180deg, #f0f7f0 0%, #ffffff 100%);
+  }
+  .media-card {
+    background: white;
+    border: 1px solid rgba(45,106,79,.18);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(45,106,79,.08);
+    margin-bottom: 32px;
+  }
+  .media-card-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 28px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1e4d38 100%);
+    color: white;
+  }
+  .media-card-header-icon {
+    font-size: 28px; flex-shrink: 0;
+  }
+  .media-card-header-text h3 {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900; font-size: 18px;
+    margin-bottom: 2px;
+  }
+  .media-card-header-text p {
+    font-size: 12px; opacity: .85; font-weight: 300;
+  }
+  .media-card-body {
+    padding: 28px;
+  }
+  .media-card-body video,
+  .media-card-body audio {
+    width: 100%;
+    border-radius: 6px;
+  }
+  .media-card-body video {
+    background: #000;
+    aspect-ratio: 16/9;
+  }
+  .media-card-body audio {
+    margin-top: 8px;
+  }
+  .media-card-caption {
+    margin-top: 16px;
+    font-size: 13px; line-height: 1.8;
+    color: #4a6858;
+    padding: 16px;
+    background: #f0f7f0;
+    border-radius: 6px;
+    border-left: 3px solid #b5835a;
+  }
+  .media-card-caption strong {
+    color: #2d6a4f;
+  }
+
+  /* PDF埋め込み */
+  .pdf-embed-wrapper {
+    position: relative;
+    width: 100%;
+    background: #1a2e1a;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .pdf-embed-wrapper iframe {
+    width: 100%;
+    height: 560px;
+    border: none;
+    display: block;
+  }
+  .pdf-fallback {
+    display: none;
+    padding: 40px;
+    text-align: center;
+    background: #f0f7f0;
+    border-radius: 6px;
+  }
+  .pdf-fallback p {
+    font-size: 14px; color: #4a6858;
+    margin-bottom: 16px;
+  }
+
   /* 比較表セクション */
   .comparison {
     background: linear-gradient(180deg, #ffffff 0%, #f0f7f0 100%);
@@ -285,6 +368,40 @@
   .project-skills {
     font-size: 12px; line-height: 1.7;
     color: #4a6858;
+  }
+
+  /* 音声プレイヤー（Projectセクション内） */
+  .audio-intro-card {
+    margin-bottom: 48px;
+    background: white;
+    border: 1px solid rgba(45,106,79,.18);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(45,106,79,.08);
+  }
+  .audio-intro-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 28px;
+    background: linear-gradient(135deg, #b5835a 0%, #9a6d45 100%);
+    color: white;
+  }
+  .audio-intro-header-icon { font-size: 24px; }
+  .audio-intro-header h4 {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900; font-size: 16px;
+  }
+  .audio-intro-header p {
+    font-size: 11px; opacity: .85; margin-top: 2px;
+  }
+  .audio-intro-body {
+    padding: 24px 28px;
+  }
+  .audio-intro-body audio {
+    width: 100%; border-radius: 6px;
+  }
+  .audio-intro-body .audio-desc {
+    margin-top: 12px;
+    font-size: 13px; color: #4a6858; line-height: 1.8;
   }
 
   /* フローセクション */
@@ -426,6 +543,9 @@
     .hero-stats { flex-wrap: wrap; gap: 24px; }
     .flow-step { flex-direction: column; gap: 12px; }
     .flow-num { font-size: 36px; min-width: auto; }
+    .pdf-embed-wrapper iframe { height: 400px; }
+    .media-card-header { padding: 16px 20px; }
+    .media-card-body { padding: 20px; }
   }
 </style>
 </head>
@@ -476,6 +596,36 @@
       <div class="stat">
         <div class="stat-num">6</div>
         <div class="stat-label">同梱ファイル</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== 動画セクション（新規追加） ===== -->
+<section class="media-section" id="video-guide">
+  <div class="container">
+    <div class="section-label">VIDEO GUIDE</div>
+    <h2 class="section-title">セットアップを<br>動画で確認</h2>
+    <p class="section-sub">45分のセットアップ手順を動画で解説。実際の画面操作を見ながら進められるので、初めてのClaude Projectでも安心です。</p>
+
+    <div class="media-card">
+      <div class="media-card-header">
+        <div class="media-card-header-icon">🎬</div>
+        <div class="media-card-header-text">
+          <h3>AI士業スキルライブラリ セットアップガイド</h3>
+          <p>Claude Project × Google Sheets の構築手順を実演</p>
+        </div>
+      </div>
+      <div class="media-card-body">
+        <video controls preload="metadata" playsinline poster="">
+          <source src="./ai_shigyo_skill_library_setup_small.mp4" type="video/mp4">
+          <p>お使いのブラウザでは動画の再生に対応していません。<a href="./ai_shigyo_skill_library_setup_small.mp4" download>こちらからダウンロード</a>してご覧ください。</p>
+        </video>
+        <div class="media-card-caption">
+          <strong>💡 この動画でわかること：</strong>Claude Projectの新規作成 → Custom instructionsのコピペ → 案件管理CRMのGoogle Sheets変換まで、実際の画面操作をステップバイステップで確認できます。
+        </div>
       </div>
     </div>
   </div>
@@ -555,6 +705,27 @@
     <div class="section-label">SOLUTION</div>
     <h2 class="section-title">8つの専門<br>Claude Project</h2>
     <p class="section-sub">士業事務所の業務を8カテゴリに分類。各Projectに4つのスキルを内包した、即戦力のAIパートナー集団です。Custom instructionsをコピペするだけですぐ使えます。</p>
+
+    <!-- 音声紹介（新規追加） -->
+    <div class="audio-intro-card">
+      <div class="audio-intro-header">
+        <div class="audio-intro-header-icon">🎧</div>
+        <div>
+          <h4>8人のAIスペシャリストを音声で紹介</h4>
+          <p>各Projectの役割と使い方がわかるオーディオガイド</p>
+        </div>
+      </div>
+      <div class="audio-intro-body">
+        <audio controls preload="metadata">
+          <source src="./8_ai_specialists_small.m4a" type="audio/mp4">
+          <p>お使いのブラウザでは音声の再生に対応していません。<a href="./8_ai_specialists_small.m4a" download>こちらからダウンロード</a>してお聴きください。</p>
+        </audio>
+        <div class="audio-desc">
+          🎤 セミナークリエイターからアナリストまで、8つのAIアシスタントがどんな業務をカバーするのか、それぞれの特徴と活用シーンを音声で解説します。通勤中や作業中にもどうぞ。
+        </div>
+      </div>
+    </div>
+
     <div class="project-grid">
       <div class="project-card">
         <div class="project-icon">🎤</div>
@@ -607,6 +778,30 @@
   <div class="container">
     <div class="section-label">HOW TO USE</div>
     <h2 class="section-title">導入は<br>4ステップ・45分</h2>
+
+    <!-- PDF図解ガイド（新規追加） -->
+    <div class="media-card" style="margin-bottom:48px;">
+      <div class="media-card-header">
+        <div class="media-card-header-icon">📖</div>
+        <div class="media-card-header-text">
+          <h3>AI士業パートナー構築ガイド（図解PDF）</h3>
+          <p>イラスト付きの全13ページ ─ 各ステップをビジュアルで理解</p>
+        </div>
+      </div>
+      <div class="media-card-body">
+        <div class="pdf-embed-wrapper" id="pdfWrapper">
+          <iframe src="./AI士業パートナー構築.pdf" title="AI士業パートナー構築ガイド"></iframe>
+        </div>
+        <div class="pdf-fallback" id="pdfFallback">
+          <p>📄 PDF をブラウザ内で表示できませんでした。</p>
+          <a href="./AI士業パートナー構築.pdf" download class="btn-primary" style="font-size:13px;">PDFをダウンロードして見る</a>
+        </div>
+        <div class="media-card-caption">
+          <strong>📌 このガイドの内容：</strong>準備（5分）→ 8つのProject作成（25分）→ CRM構築（10分）→ 動作確認（5分）の4ステップを、対話形式のイラストでやさしく解説。時間がない方向けの15分ショートカット版も収録。
+        </div>
+      </div>
+    </div>
+
     <div class="flow-steps">
       <div class="flow-step">
         <div class="flow-num">01</div>
@@ -694,7 +889,6 @@
           </div>
           <div class="set-item-badge">手順書</div>
         </div>
-      
         <div class="set-item">
           <div class="set-item-icon">📄</div>
           <div>
@@ -703,9 +897,8 @@
           </div>
           <div class="set-item-badge">案内</div>
         </div>
-</div>
+      </div>
     </div>
-  </div>
 
     <div style="margin-top:32px;padding:28px;background:#fff;border:1px solid rgba(45,106,79,.18);border-radius:8px;">
       <h3 style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:22px;color:#1a2e1a;margin-bottom:14px;">ダウンロード用リンク</h3>
@@ -719,7 +912,7 @@
         <a class="btn-secondary" href="./README.txt" download>README</a>
       </div>
     </div>
-
+  </div>
 </section>
 
 <div class="divider"></div>
@@ -749,6 +942,26 @@
     <p style="margin-top:16px;font-size:11px;color:#475569;">© 2026 kenjispark AI士業ラボ. All rights reserved.</p>
   </div>
 </footer>
+
+<script>
+  // PDF表示のフォールバック処理
+  // iOSやモバイルブラウザなどPDF埋め込み非対応の場合にダウンロードリンクを表示
+  (function(){
+    var iframe = document.querySelector('#pdfWrapper iframe');
+    if(iframe){
+      iframe.onerror = function(){
+        document.getElementById('pdfWrapper').style.display = 'none';
+        document.getElementById('pdfFallback').style.display = 'block';
+      };
+      // iOS Safari等ではiframe内PDFが真っ白になるため、
+      // タッチデバイスの場合はフォールバックを最初から表示
+      if('ontouchstart' in window && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
+        document.getElementById('pdfWrapper').style.display = 'none';
+        document.getElementById('pdfFallback').style.display = 'block';
+      }
+    }
+  })();
+</script>
 
 </body>
 </html>
